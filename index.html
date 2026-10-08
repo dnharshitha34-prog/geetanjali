@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software Engineer Portfolio</title>
+  <style>
+    /* ==== Global Reset & Variables ==== */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --font-primary: 'Inter', sans-serif;
+      --bg-light: #f5f7fa;
+      --bg-dark: #1e1e2f;
+      --accent-light: #ff6b6b;
+      --accent-dark: #ff8c42;
+      --text-light: #222;
+      --text-dark: #eee;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    body {
+      font-family: var(--font-primary);
+      line-height: 1.6;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.3s, color 0.3s;
+      display: flex;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+      }
+    }
+
+    /* ==== Night‑mode Toggle ==== */
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      width: 3rem;
+      height: 3rem;
+      background: var(--accent-light);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle::before {
+      content: '\2600';
+      font-size: 1.4rem;
+      color: #fff;
+    }
+
+    body.dark .theme-toggle::before {
+      content: '\1F319';
+    }
+
+    body.dark .theme-toggle {
+      background: var(--accent-dark);
+    }
+
+    /* ==== Vertical Navigation ==== */
+    nav.vertical-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      padding-top: 4rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.dark nav.vertical-nav {
+      background: rgba(30, 30, 47, 0.85);
+    }
+
+    nav.vertical-nav a {
+      text-decoration: none;
+      color: inherit;
+      padding: 1rem 2rem;
+      font-weight: 600;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    nav.vertical-nav a:hover,
+    nav.vertical-nav a:focus {
+      background: var(--accent-light);
+      color: #fff;
+    }
+
+    body.dark nav.vertical-nav a:hover,
+    body.dark nav.vertical-nav a:focus {
+      background: var(--accent-dark);
+    }
+
+    /* ==== Main Content ==== */
+    main {
+      margin-left: 240px;
+      flex: 1;
+    }
+
+    /* ==== Hero Section ==== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: url('WhatsApp Image 2026-10-08 at 8.59.54 PM.jpeg') center/cover no-repeat;
+      position: relative;
+      color: #fff;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: .5rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      background: repeating-linear-gradient(45deg, var(--accent-light), var(--accent-light) 10px, transparent 10px, transparent 20px);
+      transform: translateX(-50%);
+      opacity: .7;
+    }
+
+    body.dark .hero::after {
+      background: repeating-linear-gradient(45deg, var(--accent-dark), var(--accent-dark) 10px, transparent 10px, transparent 20px);
+    }
+
+    /* ==== Sections ==== */
+    section {
+      padding: 4rem 2rem;
+    }
+
+    section h2 {
+      margin-bottom: 2rem;
+      font-size: 2rem;
+    }
+
+    /* ==== About Me ==== */
+    .about-container {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .about-container img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 50%;
+      box-shadow: var(--shadow);
+    }
+
+    .about-text {
+      max-width: 500px;
+    }
+
+    /* ==== Skills Section ==== */
+
+    /* Section subtitle shown beneath the h2 */
+    .skills-subtitle {
+      text-align: center;
+      max-width: 560px;
+      margin: -0.5rem auto 2.5rem;
+      opacity: 0.75;
+      font-size: 1.05rem;
+    }
+
+    /* Grid that holds all skill-category cards */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* Each card groups one skill category (Languages, Frameworks…) */
+    .skill-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 14px;
+      padding: 2rem 1.8rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .skill-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    body.dark .skill-card {
+      background: rgba(40, 40, 65, 0.75);
+    }
+
+    /* Card header with emoji icon + category name */
+    .skill-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.4rem;
+    }
+
+    /* Pixel-art styled icon badge */
+    .skill-icon {
+      font-size: 1.6rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: var(--accent-light);
+      color: #fff;
+      /* Pixel-art touch: a crisp stepped border */
+      box-shadow:
+        inset -2px -2px 0 rgba(0, 0, 0, 0.15),
+        inset 2px 2px 0 rgba(255, 255, 255, 0.2),
+        2px 2px 0 rgba(0, 0, 0, 0.08);
+      image-rendering: pixelated;
+    }
+
+    body.dark .skill-icon {
+      background: var(--accent-dark);
+    }
+
+    .skill-card-header h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    /* Individual skill row: label + percentage on the right */
+    .skill-item {
+      margin-bottom: 1rem;
+    }
+
+    .skill-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .skill-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    /* Outer track of the progress bar */
+    .skill-bar {
+      width: 100%;
+      height: 14px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+      /* Pixel-art inset border */
+      box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark .skill-bar {
+      background: #3a3a55;
+    }
+
+    /* Filled portion — width set via inline style; animated on scroll */
+    .skill-bar-fill {
+      height: 100%;
+      width: 0;
+      /* starts empty, animated to data-width */
+      background: linear-gradient(90deg, var(--accent-light), #ff9a76);
+      border-radius: 3px;
+      transition: width 1.2s cubic-bezier(.22, .61, .36, 1);
+      position: relative;
+      /* Pixel-art repeating-stripe overlay for a retro feel */
+      background-image:
+        repeating-linear-gradient(-45deg,
+          transparent,
+          transparent 4px,
+          rgba(255, 255, 255, 0.12) 4px,
+          rgba(255, 255, 255, 0.12) 8px);
+      background-size: 200% 100%;
+      animation: shimmer 2.5s linear infinite paused;
+    }
+
+    body.dark .skill-bar-fill {
+      background: linear-gradient(90deg, var(--accent-dark), #ffb86c);
+      background-image:
+        repeating-linear-gradient(-45deg,
+          transparent,
+          transparent 4px,
+          rgba(255, 255, 255, 0.1) 4px,
+          rgba(255, 255, 255, 0.1) 8px);
+      background-size: 200% 100%;
+    }
+
+    /* Shimmer animation that plays on hover */
+    .skill-card:hover .skill-bar-fill {
+      animation-play-state: running;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    /* When IntersectionObserver adds .in-view, fill bars animate to target width */
+    .skill-bar-fill.in-view {
+      /* width is set from JS via the data-width attribute */
+    }
+
+    /* ==== Timeline Section ==== */
+
+    /* Centred heading subtitle */
+    .timeline-subtitle {
+      text-align: center;
+      max-width: 520px;
+      margin: -0.5rem auto 3rem;
+      opacity: 0.75;
+      font-size: 1.05rem;
+    }
+
+    /* Wrapper that holds the vertical centre line and all event items */
+    .timeline {
+      position: relative;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1rem 0;
+    }
+
+    /* Vertical centre line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--accent-light), #ff9a76);
+      transform: translateX(-50%);
+      border-radius: 2px;
+      /* Pixel-art stepped shadow */
+      box-shadow: 2px 0 0 rgba(0, 0, 0, 0.06);
+    }
+
+    body.dark .timeline::before {
+      background: linear-gradient(180deg, var(--accent-dark), #ffb86c);
+    }
+
+    /* Each milestone event */
+    .timeline-item {
+      position: relative;
+      width: 50%;
+      padding: 0 2.5rem 3rem;
+    }
+
+    /* Odd items sit on the left */
+    .timeline-item:nth-child(odd) {
+      left: 0;
+      text-align: right;
+    }
+
+    /* Even items sit on the right */
+    .timeline-item:nth-child(even) {
+      left: 50%;
+      text-align: left;
+    }
+
+    /* Dot on the centre line */
+    .timeline-dot {
+      position: absolute;
+      top: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      border: 3px solid var(--bg-light);
+      z-index: 1;
+      /* Pixel-art bevel */
+      box-shadow:
+        inset -2px -2px 0 rgba(0, 0, 0, 0.12),
+        inset 2px 2px 0 rgba(255, 255, 255, 0.25),
+        0 0 0 3px rgba(255, 107, 107, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    body.dark .timeline-dot {
+      background: var(--accent-dark);
+      border-color: var(--bg-dark);
+      box-shadow:
+        inset -2px -2px 0 rgba(0, 0, 0, 0.15),
+        inset 2px 2px 0 rgba(255, 255, 255, 0.15),
+        0 0 0 3px rgba(255, 140, 66, 0.25);
+    }
+
+    /* Position dot on the right edge for odd (left-side) items */
+    .timeline-item:nth-child(odd) .timeline-dot {
+      right: -9px;
+    }
+
+    /* Position dot on the left edge for even (right-side) items */
+    .timeline-item:nth-child(even) .timeline-dot {
+      left: -9px;
+    }
+
+    /* Hover: pulse the dot */
+    .timeline-item:hover .timeline-dot {
+      transform: scale(1.35);
+      box-shadow:
+        0 0 0 6px rgba(255, 107, 107, 0.25),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    body.dark .timeline-item:hover .timeline-dot {
+      box-shadow:
+        0 0 0 6px rgba(255, 140, 66, 0.3),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    /* The rounded event card */
+    .timeline-card {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(8px);
+      border-radius: 14px;
+      padding: 1.5rem 1.6rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .timeline-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    body.dark .timeline-card {
+      background: rgba(40, 40, 65, 0.75);
+    }
+
+    /* Year badge inside the card */
+    .timeline-year {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.7rem;
+      border-radius: 6px;
+      background: var(--accent-light);
+      color: #fff;
+      margin-bottom: 0.6rem;
+      /* Pixel-art stepped shadow */
+      box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    body.dark .timeline-year {
+      background: var(--accent-dark);
+    }
+
+    .timeline-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .timeline-card p {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      opacity: 0.85;
+    }
+
+    /* Scroll-reveal: items start invisible, slide in when observed */
+    .timeline-item {
+      opacity: 0;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .timeline-item:nth-child(odd) {
+      transform: translateX(-30px);
+    }
+
+    .timeline-item:nth-child(even) {
+      transform: translateX(30px);
+    }
+
+    .timeline-item.in-view {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ==== Responsive overrides ==== */
+    @media(max-width:768px) {
+      nav.vertical-nav {
+        position: relative;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      nav.vertical-nav a {
+        padding: 0.5rem 1rem;
+      }
+
+      main {
+        margin-left: 0;
+      }
+
+      .about-container {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Timeline collapses to a single column on mobile */
+      .timeline::before {
+        left: 18px;
+      }
+
+      .timeline-item,
+      .timeline-item:nth-child(odd),
+      .timeline-item:nth-child(even) {
+        width: 100%;
+        left: 0;
+        padding-left: 50px;
+        padding-right: 1rem;
+        text-align: left;
+      }
+
+      .timeline-item:nth-child(odd) .timeline-dot,
+      .timeline-item:nth-child(even) .timeline-dot {
+        left: 9px;
+        right: auto;
+      }
+
+      /* Reset slide direction for mobile */
+      .timeline-item:nth-child(odd),
+      .timeline-item:nth-child(even) {
+        transform: translateY(20px);
+      }
+
+      .timeline-item.in-view {
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="theme-toggle" aria-label="Toggle dark mode" onclick="document.body.classList.toggle('dark')"></div>
+
+  <nav class="vertical-nav" aria-label="Primary">
+    <a href="#hero">Home</a>
+    <a href="#about">About Me</a>
+    <a href="#skills">Skills</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#projects">Projects</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#chat">Chat</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero-content">
+        <h1>Welcome, I'm Geetanjali</h1>
+        <p>Software Engineer • Creating pixel‑perfect experiences</p>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2>About Me</h2>
+      <div class="about-container">
+        <img src="WhatsApp Image 2026-10-08 at 8.59.55 PM.jpeg" alt="Profile picture of Geetanjali" />
+        <div class="about-text">
+          <p>Hello! I'm Geetanjali, a passionate software engineer with 5+ years of experience building web applications
+            that blend performance with elegant design. I specialize in full‑stack development, crafting clean,
+            maintainable code in JavaScript, TypeScript, and Python.</p>
+          <p>Highlights of my career include leading a cross‑functional team to launch a SaaS product adopted by 10,000+
+            users, contributing to open‑source UI libraries, and speaking at React conferences. When I'm not coding, I
+            enjoy pixel‑art illustration, hiking, and exploring vintage synth music.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Skills Section
+         – 4 category cards: Languages, Frameworks, DevOps, Design
+         – Each skill has a pixel-art progress bar animated on scroll
+         ============================================================ -->
+    <section id="skills">
+      <h2>Skills</h2>
+      <p class="skills-subtitle">Core competencies honed across 5+ years of full-stack engineering.</p>
+
+      <div class="skills-grid">
+
+        <!-- Card 1 – Programming Languages -->
+        <div class="skill-card">
+          <div class="skill-card-header">
+            <span class="skill-icon" aria-hidden="true">⌨️</span>
+            <h3>Languages</h3>
+          </div>
+          <!-- JavaScript — primary language -->
+          <div class="skill-item">
+            <div class="skill-label"><span>JavaScript</span><span>95%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="95%"></div>
+            </div>
+          </div>
+          <!-- TypeScript — strongly typed JS -->
+          <div class="skill-item">
+            <div class="skill-label"><span>TypeScript</span><span>90%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="90%"></div>
+            </div>
+          </div>
+          <!-- Python — backend & scripting -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Python</span><span>85%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="85%"></div>
+            </div>
+          </div>
+          <!-- SQL — database querying -->
+          <div class="skill-item">
+            <div class="skill-label"><span>SQL</span><span>80%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="80%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 – Frameworks & Libraries -->
+        <div class="skill-card">
+          <div class="skill-card-header">
+            <span class="skill-icon" aria-hidden="true">🧩</span>
+            <h3>Frameworks</h3>
+          </div>
+          <!-- React — primary UI library -->
+          <div class="skill-item">
+            <div class="skill-label"><span>React</span><span>92%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="92%"></div>
+            </div>
+          </div>
+          <!-- Next.js — SSR / SSG framework -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Next.js</span><span>85%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="85%"></div>
+            </div>
+          </div>
+          <!-- Node.js — server-side runtime -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Node.js</span><span>88%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="88%"></div>
+            </div>
+          </div>
+          <!-- Django — Python web framework -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Django</span><span>75%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="75%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 – DevOps & Tools -->
+        <div class="skill-card">
+          <div class="skill-card-header">
+            <span class="skill-icon" aria-hidden="true">🛠️</span>
+            <h3>DevOps & Tools</h3>
+          </div>
+          <!-- Git — version control -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Git & GitHub</span><span>93%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="93%"></div>
+            </div>
+          </div>
+          <!-- Docker — containerisation -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Docker</span><span>80%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="80%"></div>
+            </div>
+          </div>
+          <!-- CI/CD — automated pipelines -->
+          <div class="skill-item">
+            <div class="skill-label"><span>CI / CD</span><span>78%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="78%"></div>
+            </div>
+          </div>
+          <!-- AWS — cloud infrastructure -->
+          <div class="skill-item">
+            <div class="skill-label"><span>AWS / GCP</span><span>72%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="72%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 – Design & Soft Skills -->
+        <div class="skill-card">
+          <div class="skill-card-header">
+            <span class="skill-icon" aria-hidden="true">🎨</span>
+            <h3>Design & UX</h3>
+          </div>
+          <!-- Figma — UI/UX design tool -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Figma</span><span>85%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="85%"></div>
+            </div>
+          </div>
+          <!-- Responsive Design — cross-device layouts -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Responsive Design</span><span>90%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="90%"></div>
+            </div>
+          </div>
+          <!-- Accessibility — inclusive web practices -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Accessibility (a11y)</span><span>82%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="82%"></div>
+            </div>
+          </div>
+          <!-- Pixel Art — personal creative niche -->
+          <div class="skill-item">
+            <div class="skill-label"><span>Pixel Art</span><span>88%</span></div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" data-width="88%"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.skills-grid -->
+    </section>
+
+    <!-- Scroll-triggered animation: fills progress bars when they enter the viewport -->
+    <script>
+      (function () {
+        const fills = document.querySelectorAll('.skill-bar-fill');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Set the bar width to the value in data-width
+              entry.target.style.width = entry.target.dataset.width;
+              entry.target.classList.add('in-view');
+              observer.unobserve(entry.target);   // animate only once
+            }
+          });
+        }, { threshold: 0.3 });
+
+        fills.forEach(fill => observer.observe(fill));
+      })();
+    </script>
+    <!-- ============================================================
+         Timeline Section
+         – Vertical centre-line with alternating left / right cards
+         – Each card is a career milestone with year badge
+         – Cards slide in on scroll via IntersectionObserver
+         ============================================================ -->
+    <section id="timeline">
+      <h2>Timeline</h2>
+      <p class="timeline-subtitle">Key milestones across education, career, and personal growth.</p>
+
+      <div class="timeline">
+
+        <!-- 1 ▸ Education — B.Tech degree -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">2017 – 2021</span>
+            <h3>B.Tech in Computer Science</h3>
+            <p>Graduated with distinction, specialising in algorithms and data structures. Built a capstone project
+              automating campus resource scheduling.</p>
+          </div>
+        </div>
+
+        <!-- 2 ▸ First role — Junior Developer -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">2021</span>
+            <h3>Junior Developer @ TechStart</h3>
+            <p>Developed customer-facing React dashboards and integrated REST APIs, reducing average page-load time by
+              40%.</p>
+          </div>
+        </div>
+
+        <!-- 3 ▸ Open Source contribution -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">2022</span>
+            <h3>Open-Source UI Library Contributor</h3>
+            <p>Contributed accessible component primitives to an open-source design system, adopted by 2,000+ projects
+              on npm.</p>
+          </div>
+        </div>
+
+        <!-- 4 ▸ Promotion — Mid-level Engineer -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">2023</span>
+            <h3>Software Engineer @ CloudNova</h3>
+            <p>Promoted to mid-level engineer; led the front-end architecture for a SaaS analytics platform serving
+              10,000+ users.</p>
+          </div>
+        </div>
+
+        <!-- 5 ▸ Conference talk -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">2024</span>
+            <h3>Speaker @ ReactConf India</h3>
+            <p>Delivered a talk on "Pixel-Perfect Accessibility" — bridging aesthetic design with inclusive engineering
+              practices.</p>
+          </div>
+        </div>
+
+        <!-- 6 ▸ Current — Senior / Lead role -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">2025 – Present</span>
+            <h3>Lead Front-End Engineer @ NexGen</h3>
+            <p>Heading a cross-functional squad of eight, shipping a next-gen design-to-code platform using Next.js,
+              TypeScript, and Figma plugins.</p>
+          </div>
+        </div>
+
+      </div><!-- /.timeline -->
+    </section>
+
+    <!-- Scroll-reveal for timeline items -->
+    <script>
+      (function () {
+        const items = document.querySelectorAll('.timeline-item');
+        const tObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              tObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.2 });
+
+        items.forEach(item => tObserver.observe(item));
+      })();
+    </script>
+    <section id="projects">
+      <h2>Projects</h2><!-- Placeholder -->
+    </section>
+    <section id="testimonials">
+      <h2>Testimonials</h2><!-- Placeholder -->
+    </section>
+    <section id="chat">
+      <h2>Chat</h2><!-- Placeholder -->
+    </section>
+    <section id="contact">
+      <h2>Contact</h2><!-- Placeholder -->
+    </section>
+  </main>
+  <footer>
+    <p style="text-align:center;padding:2rem 0;">© 2026 Geetanjali. All rights reserved.</p>
+  </footer>
+</body>
+
+</html>
